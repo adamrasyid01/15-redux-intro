@@ -5,13 +5,14 @@ import App from "./App";
 import reportWebVitals from "./reportWebVitals";
 
 import store from "./store";
-import { type } from "@testing-library/user-event/dist/type";
+import { Provider } from "react-redux";
 
-store.dispatch({ type: "account/deposit", payload: 1000 });
 const root = ReactDOM.createRoot(document.getElementById("root"));
 root.render(
   <React.StrictMode>
-    <App />
+    <Provider store={store}>
+      <App />
+    </Provider>
   </React.StrictMode>,
 );
 
