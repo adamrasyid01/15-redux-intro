@@ -10,14 +10,20 @@ function AccountOperations() {
   const [currency, setCurrency] = useState("USD");
 
   const dispatch = useDispatch();
-  const { loan: currentLoan, loanPurpose: currentLoanPurpose, balance } = useSelector((state) => state.account);
+  const {
+    loan: currentLoan,
+    loanPurpose: currentLoanPurpose,
+    balance,
+    isLoading,
+  } = useSelector((state) => state.account);
 
   // console.log(account);
 
   function handleDeposit() {
     if (!depositAmount) return alert("Please enter an amount to deposit");
-    dispatch(deposit(depositAmount));
+    dispatch(deposit(depositAmount, currency));
     setDepositAmount("");
+    setCurrency("USD");
   }
 
   function handleWithdrawal() {
@@ -51,13 +57,17 @@ function AccountOperations() {
             <option value="GBP">British Pound</option>
           </select>
 
-          <button onClick={handleDeposit}>Deposit {depositAmount}</button>
+          <button onClick={handleDeposit} disabled={isLoading}>
+            {isLoading ? "Converting..." : "Deposit"} {depositAmount}
+          </button>
         </div>
 
         <div>
           <label>Withdraw</label>
           <input type="number" value={withdrawalAmount} onChange={(e) => setWithdrawalAmount(+e.target.value)} />
-          <button onClick={handleWithdrawal}>Withdraw {withdrawalAmount}</button>
+          <button onClick={handleWithdrawal} disabled={isLoading}>
+            {isLoading ? "Processing..." : "Withdraw"} {withdrawalAmount}
+          </button>
         </div>
 
         <div>
@@ -69,14 +79,18 @@ function AccountOperations() {
             placeholder="Loan amount"
           />
           <input value={loanPurpose} onChange={(e) => setLoanPurpose(e.target.value)} placeholder="Loan purpose" />
-          <button onClick={handleRequestLoan}>Request loan</button>
+          <button onClick={handleRequestLoan} disabled={isLoading}>
+            {isLoading ? "Processing..." : "Request loan"}
+          </button>
         </div>
         {currentLoan > 0 && (
           <div>
             <span>
               Pay back ${currentLoan}({currentLoanPurpose})
             </span>
-            <button onClick={handlePayLoan}>Pay loan</button>
+            <button onClick={handlePayLoan} disabled={isLoading}>
+              {isLoading ? "Processing..." : "Pay loan"}
+            </button>
           </div>
         )}
       </div>
